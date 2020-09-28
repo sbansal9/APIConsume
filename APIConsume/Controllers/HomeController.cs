@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using APIConsume.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace APIConsume.Controllers
             return View(userList);
         }
 
+        // Get User
         public ViewResult GetUser() => View();
 
         [HttpPost]
@@ -40,6 +42,27 @@ namespace APIConsume.Controllers
                 }
             }
             return View(reservation);
+        }
+
+
+        // Register User
+        public ViewResult AddUser() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> AddUser(User reservation)
+        {
+            User receivedUser = new User();
+            using (var httpClient = new HttpClient())
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reservation), Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.PostAsync("http://localhost:5000/api/v1/identity/Register", content))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    receivedUser = JsonConvert.DeserializeObject<User>(apiResponse);
+                }
+            }
+            return View(receivedUser);
         }
     }
 }
