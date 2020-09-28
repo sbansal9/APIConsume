@@ -24,5 +24,22 @@ namespace APIConsume.Controllers
             }
             return View(userList);
         }
+
+        public ViewResult GetUser() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            User reservation = new User();
+            using (var httpClient = new HttpClient())
+            {
+                using (var response = await httpClient.GetAsync("http://localhost:5000/api/v1/identity/" + id))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    reservation = JsonConvert.DeserializeObject<User>(apiResponse);
+                }
+            }
+            return View(reservation);
+        }
     }
 }
