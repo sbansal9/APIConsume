@@ -1,0 +1,42 @@
+﻿@model IEnumerable<User>
+@{ Layout = "_Layout"; ViewBag.Title = "All Users";}
+
+<h2>All Reservations</h2>
+<a asp-action="AddUser" class="btn btn-sm btn-primary">Add User</a>
+<a asp-action="GetUser" class="btn btn-sm btn-secondary">Get User</a>
+
+<table class="table table-sm table-striped table-bordered m-2">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Start Location</th>
+            <th>End Location</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.UserId</td>
+                <td>@r.UserName</td>
+                <td>@r.EmailAddress</td>
+                <td>@r.LastName</td>
+                <td>@r.FirstName</td>
+                <td>
+                    <a asp-action="UpdateUser" asp-route-id="@r.UserId">
+                        <img src="/icon/edit.png" />
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="DeleteUser" method="post">
+                        <input type="hidden" value="@r.UserId" name="UserId" />
+                        <input type="image" src="/icon/close.png" />
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
