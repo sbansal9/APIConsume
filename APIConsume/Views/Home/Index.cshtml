@@ -20,26 +20,28 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var r in Model)
-        {
-        <tr>
-            <td>@r.UserId</td>
-            <td>@r.UserName</td>
-            <td>@r.EmailAddress</td>
-            <td>@r.FirstName</td>
-            <td>@r.LastName</td>
-            <td>
-                <a asp-action="UpdateUser" asp-route-id="@r.UserId">4
-                    <img src="/icon/edit.png" />
-                </a>
-            </td>
-            <td>
-                <form asp-action="DeleteUser" method="post">
-                    <input type="hidden" value="@r.UserId" name="UserId" />
-                    <input type="image" src="/icon/close.png" />
-                </form>
-            </td>
-        </tr>
+        @if (@Model != null) {
+            foreach (var r in Model)
+            {
+            <tr>
+                <td>@r.UserId</td>
+                <td>@r.UserName</td>
+                <td>@r.EmailAddress</td>
+                <td>@r.FirstName</td>
+                <td>@r.LastName</td>
+                <td>
+                    <a asp-action="UpdateUser" asp-route-id="@r.UserId">4
+                        <img src="/icon/edit.png" />
+                    </a>
+                </td>
+                <td>
+                    <form asp-action="DeleteUser" method="post">
+                        <input type="hidden" value="@r.UserId" name="UserId" />
+                        <input type="image" src="/icon/close.png" />
+                    </form>
+                </td>
+            </tr>
+            }
         }
     </tbody>
 </table>

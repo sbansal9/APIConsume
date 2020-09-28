@@ -12,18 +12,29 @@ namespace APIConsume.Controllers
 {
     public class HomeController : Controller
     {
+        private string _Token;
+
         public async Task<IActionResult> Index()
         {
+
             List<User> userList = new List<User>();
+            bool isSuccess = false;
             using (var httpClient = new HttpClient())
             {
                 using (var response = await httpClient.GetAsync("http://localhost:5000/api/v1/identity/user"))
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    userList = JsonConvert.DeserializeObject<List<User>>(apiResponse);
+                    if (isSuccess = response.IsSuccessStatusCode)
+                    {
+                        string apiResponse = await response.Content.ReadAsStringAsync();
+                        userList = JsonConvert.DeserializeObject<List<User>>(apiResponse);
+                    }
                 }
             }
-            return View(userList);
+
+            if (isSuccess)
+                return View(userList);
+            else
+                return View("ErrorView");
         }
 
         // Get User
@@ -63,6 +74,25 @@ namespace APIConsume.Controllers
                 }
             }
             return View(receivedUser);
+        }
+
+
+
+        [HttpPost]
+        public async Task<string> Authenticate(User reservation)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(reservation), Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.PostAsync("http://localhost:5000/api/v1/identity/Authenticate", content))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    _Token = JsonConvert.DeserializeObject<string>(apiResponse);
+                }
+            }
+
+            return _Token;
         }
     }
 }
